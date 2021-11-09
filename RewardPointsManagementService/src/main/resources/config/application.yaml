@@ -1,0 +1,38 @@
+server:
+  port: 8080
+
+spring:
+  service.name: reward-points-management-service
+  service.version: bamboobuild
+
+  h2: 
+   console.enabled: true     
+   console.path: /h2-console
+   console.settings.trace: false 
+   console.settings.web-allow-others: false
+  datasource: 
+   url: jdbc:h2:mem:rewardPointsdb
+#   url: jdbc:h2:file:/data/demo
+   driverClassName: org.h2.Driver
+   username: sa
+   password: 
+  
+  jpa:
+   database-platform: org.hibernate.dialect.H2Dialect
+   
+info:
+  service: ${spring.service.name}
+  port: ${server.port}
+  description: description
+
+springdoc.swagger-ui.path: /api/swagger-ui-home.html
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      
