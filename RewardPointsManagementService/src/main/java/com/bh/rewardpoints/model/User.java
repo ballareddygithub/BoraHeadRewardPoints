@@ -75,5 +75,12 @@ public class User {
 	public void setCumulative(Long cumulative) {
 		this.cumulative = cumulative;
 	}
+
+	@Override
+	public String toString() {
+		return "User [uesrId=" + uesrId + ", email=" + email + ", bhEntity=" + bhEntity + ", redemmed=" + redemmed
+				+ ", balance=" + balance + ", cumulative=" + cumulative + "]";
+	}
+	
 	
 }
