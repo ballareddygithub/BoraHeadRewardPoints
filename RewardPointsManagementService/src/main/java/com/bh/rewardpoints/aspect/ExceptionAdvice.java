@@ -24,7 +24,7 @@ public class ExceptionAdvice {
     private Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity handle(RuntimeException ex){
+    public ResponseEntity<?> handle(RuntimeException ex){
         logger.error("Request Error{} ",ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -32,22 +32,23 @@ public class ExceptionAdvice {
     }
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest webRequest, HttpServletRequest request){
+    public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex, WebRequest webRequest, HttpServletRequest request){
         logger.error("Request Error {} ", ex.getMessage());
+        
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", ex.getMessage());
+        body.put("cause", ex.getMessage());
         body.put("path", request.getRequestURI());
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(WithdrawalPointsException.class)
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> withdrawPointsException(WithdrawalPointsException ex, WebRequest webRequest, HttpServletRequest request){
         logger.error("Request Error {} ", ex.getMessage());
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", ex.getMessage());
+        body.put("cause", ex.getMessage());
         body.put("path", request.getRequestURI());
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 }

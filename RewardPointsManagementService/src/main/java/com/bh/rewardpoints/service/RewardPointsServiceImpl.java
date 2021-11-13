@@ -1,4 +1,4 @@
-package com.bh.rewardpoints.so;
+package com.bh.rewardpoints.service;
 
 import java.util.ArrayList;
 import java.util.List;
