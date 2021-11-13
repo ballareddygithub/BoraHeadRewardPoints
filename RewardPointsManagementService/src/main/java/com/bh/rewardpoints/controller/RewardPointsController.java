@@ -95,7 +95,12 @@ public class RewardPointsController {
     })
     @PostMapping("/points/{id}/{withdrawal}")
     public ResponseEntity<?> withdrawPoints(@PathVariable("id") String userId, @PathVariable("withdrawal") String withdrawal) throws UserNotFoundException, NumberFormatException, WithdrawalPointsException{   
-    	User user = rewardPointsService.withdrawalPoints(userId, Long.valueOf(withdrawal));   
+    	logger.info("User {} trying to withdraw reward points {}", userId, withdrawal);
+    	User user = rewardPointsService.withdrawalPoints(userId, Long.valueOf(withdrawal));  
+    	if(user == null) {
+    		logger.info("User is not availale for the userid : {}", userId);
+    		throw new UserNotFoundException(String.format("User for userId %s not found", userId));
+    	}
     	logger.info("User : {}", user);
     	UserResponse userResponse = new UserResponse();
 		userResponse.setBhEntity(user.getBhEntity());
