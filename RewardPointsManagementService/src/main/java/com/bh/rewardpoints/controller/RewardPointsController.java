@@ -2,6 +2,7 @@ package com.bh.rewardpoints.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -46,7 +47,7 @@ public class RewardPointsController {
             @ApiResponse(responseCode = "403", description = "Permission denied")
     })
     @GetMapping("/users")
-    public ResponseEntity<?> getAllUsers() {   
+    public ResponseEntity<?> getAllUsers() throws UserNotFoundException {   
     	List<User> usersList = rewardPointsService.getAllUsers();
     	logger.info("All Users :{} ", usersList);
     	List<UserResponse> userProfileList = new ArrayList<>();
@@ -58,6 +59,8 @@ public class RewardPointsController {
     			userResponse.setEmail(user.getEmail());
     			userProfileList.add(userResponse);
     		});
+    	}else {
+    		throw new UserNotFoundException("No Users Found in database");
     	}
         return ResponseEntity.ok(userProfileList);
     }
@@ -70,10 +73,12 @@ public class RewardPointsController {
     })
     @GetMapping("/users/{id}")
     public ResponseEntity<?> getUserbyUserId(@PathVariable("id") String userId) throws UserNotFoundException{   
-    	User user = rewardPointsService.findUserByUserId(userId);
-    	if(user == null) {
-    		throw new UserNotFoundException(userId);
+    	Optional<User> userOptional = rewardPointsService.findUserByUserId(userId);
+    	if(!userOptional.isPresent()) {
+    		logger.info("User is not availale for the userid : {}", userId);
+    		throw new UserNotFoundException(String.format("User for userId %s not found", userId));
     	}
+    	User user = userOptional.get();
     	logger.info("User {} for an id : {}", user, userId);
     	UserResponse userResponse = new UserResponse();
 		userResponse.setBhEntity(user.getBhEntity());

@@ -2,6 +2,7 @@ package com.bh.rewardpoints.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -30,8 +31,8 @@ public class RewardPointsServiceImpl implements RewardPointsService{
 		return usersList; 
 	}
 	@Override
-	public User findUserByUserId(String userId) {		
-		return rewardPointsRepository.findById(userId).get();
+	public Optional<User> findUserByUserId(String userId) {		
+		return rewardPointsRepository.findById(userId);
 	}
 
 	@Override
