@@ -38,15 +38,19 @@ public class RewardPointsServiceImpl implements RewardPointsService{
 	@Override
 	public User withdrawalPoints(String userId, Long withdrawal) throws UserNotFoundException, WithdrawalPointsException {
 
-		User user = rewardPointsRepository.findById(userId).get();
+    	Optional<User> userOptional = rewardPointsRepository.findById(userId);
 		User updatedUser = null;
-		if(user == null) {
-			throw new UserNotFoundException(userId);
+		if(!userOptional.isPresent()) {
+			logger.info("User is not availale for the userid : {}", userId);
+			throw new UserNotFoundException(String.format("User is not availale for the userid : %s", userId));
 		}else {
+			User user = userOptional.get();
 			if(withdrawal > user.getBalance()) {
+				logger.info("InSufficiant Points, available balance is : {}", user.getBalance());
 				throw new WithdrawalPointsException(String.format("InSufficiant Points, available balance is : %s", user.getBalance()));
 			}else if(withdrawal < 0) {
-				throw new WithdrawalPointsException(String.format("you can't withdraw negetive points %s ", withdrawal));
+				logger.info("You can't withdraw negetive points %s ", withdrawal);
+				throw new WithdrawalPointsException(String.format("You can't withdraw negetive points %s ", withdrawal));
 			}else {
 				logger.info("Withdrawal Points : {}", withdrawal);
 				Long remainingBalance  = user.getBalance() - withdrawal;
@@ -56,7 +60,9 @@ public class RewardPointsServiceImpl implements RewardPointsService{
 				logger.info("Redemed Points : {}", redemed);
 				user.setRedemmed(redemed);
 				updatedUser = rewardPointsRepository.save(user);
+				logger.info("Successfully withdrawn reward points");
 				logger.info("Updated User : {}", updatedUser);
+				
 			}
 		}
 
