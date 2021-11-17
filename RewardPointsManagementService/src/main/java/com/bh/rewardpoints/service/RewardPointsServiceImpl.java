@@ -49,16 +49,16 @@ public class RewardPointsServiceImpl implements RewardPointsService{
 				logger.info("InSufficiant Points, available balance is : {}", user.getBalance());
 				throw new WithdrawalPointsException(String.format("InSufficiant Points, available balance is : %s", user.getBalance()));
 			}else if(withdrawal < 0) {
-				logger.info("You %s can't withdraw negetive points %s ", userId, withdrawal);
+				logger.info("You {} can't withdraw negetive points {} ", userId, withdrawal);
 				throw new WithdrawalPointsException(String.format("You can't withdraw negetive points %s ", withdrawal));
 			}else {
 				logger.info("Withdrawal Points : {}", withdrawal);
 				Long remainingBalance  = user.getBalance() - withdrawal;
 				logger.info("Remaining Balance : {}", remainingBalance);
 				user.setBalance(remainingBalance);
-				Long redemed  = user.getRedemmed() + withdrawal;
+				Long redemed  = user.getRedeemed() + withdrawal;
 				logger.info("Redemed Points : {}", redemed);
-				user.setRedemmed(redemed);
+				user.setRedeemed(redemed);
 				updatedUser = rewardPointsRepository.save(user);
 				logger.info("Successfully withdrawn reward points");
 				logger.info("Updated User : {}", updatedUser);

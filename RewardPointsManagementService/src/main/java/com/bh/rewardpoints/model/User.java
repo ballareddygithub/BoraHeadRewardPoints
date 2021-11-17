@@ -19,8 +19,8 @@ public class User {
 	@Column(name = "BHENTITY")
 	private String bhEntity;
 	
-	@Column(name = "REDEMMED")
-	private Long redemmed;
+	@Column(name = "REDEEMED")
+	private Long redeemed;
 	
 	@Column(name = "BALANCE")
 	private Long balance;
@@ -52,14 +52,6 @@ public class User {
 		this.bhEntity = bhEntity;
 	}
 
-	public Long getRedemmed() {
-		return redemmed;
-	}
-
-	public void setRedemmed(Long redemmed) {
-		this.redemmed = redemmed;
-	}
-
 	public Long getBalance() {
 		return balance;
 	}
@@ -75,10 +67,18 @@ public class User {
 	public void setCumulative(Long cumulative) {
 		this.cumulative = cumulative;
 	}
+	
+	public Long getRedeemed() {
+		return redeemed;
+	}
+
+	public void setRedeemed(Long redeemed) {
+		this.redeemed = redeemed;
+	}
 
 	@Override
 	public String toString() {
-		return "User [uesrId=" + uesrId + ", email=" + email + ", bhEntity=" + bhEntity + ", redemmed=" + redemmed
+		return "User [uesrId=" + uesrId + ", email=" + email + ", bhEntity=" + bhEntity + ", redeemed=" + redeemed
 				+ ", balance=" + balance + ", cumulative=" + cumulative + "]";
 	}
 	
