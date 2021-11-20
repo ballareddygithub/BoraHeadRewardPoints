@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.bh.rewardpoints.aspect.ExceptionAdvice;
 import com.bh.rewardpoints.controller.RewardPointsController;
 import com.bh.rewardpoints.exception.UserNotFoundException;
 import com.bh.rewardpoints.model.User;
@@ -45,7 +46,8 @@ public class RewardPointsControllerTest {
 	@Before
 	public void setup() {	
 		rewardPointsController = new RewardPointsController();
-		this.mockMvc = MockMvcBuilders.standaloneSetup(rewardPointsController).build();
+		this.mockMvc = MockMvcBuilders.standaloneSetup(rewardPointsController)
+				 .setControllerAdvice(new ExceptionAdvice()).build();
 		ReflectionTestUtils.setField(rewardPointsController, "rewardPointsService", rewardPointsService);
 	}
 
