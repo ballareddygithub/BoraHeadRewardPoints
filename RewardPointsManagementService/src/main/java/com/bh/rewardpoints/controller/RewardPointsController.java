@@ -2,18 +2,22 @@ package com.bh.rewardpoints.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -108,4 +112,18 @@ public class RewardPointsController {
 		userResponse.setEmail(user.getEmail());
         return ResponseEntity.ok(userResponse);
     } 
+    @Operation(summary="updateUsersAndThrPoints",description="API to update users and their points from ISpring")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "all ok"),
+            @ApiResponse(responseCode = "400", description = "bad request data"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Permission denied")
+    })
+    /* this method called by scheduler monthly*/
+    @PutMapping("/scheduler/update")
+    public ResponseEntity<?> updateUsersAndThrPoints(@RequestBody List<User> usersList) {
+    	Map<String, List<User>> allUsers = rewardPointsService.updateUsers(usersList);
+    	return ResponseEntity.ok(allUsers);
+    }
+    
 }

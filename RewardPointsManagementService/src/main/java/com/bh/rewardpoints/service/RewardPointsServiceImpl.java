@@ -1,7 +1,9 @@
 package com.bh.rewardpoints.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -31,13 +33,15 @@ public class RewardPointsServiceImpl implements RewardPointsService{
 		return usersList; 
 	}
 	@Override
-	public Optional<User> findUserByUserId(String userId) {		
+	public Optional<User> findUserByUserId(String userId) {	
+		logger.info("find User By Id {} : ", userId);
 		return rewardPointsRepository.findById(userId);
 	}
 
 	@Override
 	public User withdrawalPoints(String userId, Long withdrawal) throws UserNotFoundException, WithdrawalPointsException {
 
+		logger.info("User : {} withdrwal Points {}", userId, withdrawal);
     	Optional<User> userOptional = rewardPointsRepository.findById(userId);
 		User updatedUser = null;
 		if(!userOptional.isPresent()) {
@@ -68,4 +72,31 @@ public class RewardPointsServiceImpl implements RewardPointsService{
 
 		return updatedUser;
 	}
+	
+	@Override
+	public Map<String, List<User>> updateUsers(List<User> listUser) {
+		Map<String, List<User>> allUsers = new HashMap<>();
+		List<User> existingUsersupdatedFromIspring = new ArrayList<>();
+		List<User> newUsersFromISpring = new ArrayList<>();
+		listUser.forEach(user -> {
+			Optional<User> userOptional = rewardPointsRepository.findById(user.getUesrId());
+			if(userOptional.isPresent()) {
+				// update User if user present in DB.
+				User userFromDB = userOptional.get();
+				userFromDB.setBalance(user.getBalance());
+				userFromDB.setBhEntity(user.getBhEntity());
+				userFromDB.setCumulative(user.getCumulative());
+				userFromDB.setEmail(user.getEmail());
+				userFromDB.setRedeemed(user.getRedeemed());
+				existingUsersupdatedFromIspring.add(rewardPointsRepository.save(userFromDB));
+			}else {
+				// create/save User which is from ISpring not present in DB.
+				newUsersFromISpring.add(rewardPointsRepository.save(user));
+			}
+		});
+		allUsers.put("NewUser", newUsersFromISpring);
+		allUsers.put("ExistingUser", existingUsersupdatedFromIspring);
+		return allUsers;
+	}
+
 }
