@@ -81,6 +81,6 @@ public class User {
 		return "User [uesrId=" + uesrId + ", email=" + email + ", bhEntity=" + bhEntity + ", redeemed=" + redeemed
 				+ ", balance=" + balance + ", cumulative=" + cumulative + "]";
 	}
-	
-	
+
+
 }

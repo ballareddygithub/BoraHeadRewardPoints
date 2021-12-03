@@ -120,7 +120,7 @@ public class RewardPointsController {
             @ApiResponse(responseCode = "403", description = "Permission denied")
     })
     /* this method called by scheduler monthly*/
-    @PutMapping("/scheduler/update")
+    @PutMapping("/scheduler/update/user")
     public ResponseEntity<?> updateUsersAndThrPoints(@RequestBody List<User> usersList) {
     	Map<String, List<User>> allUsers = rewardPointsService.updateUsers(usersList);
     	return ResponseEntity.ok(allUsers);

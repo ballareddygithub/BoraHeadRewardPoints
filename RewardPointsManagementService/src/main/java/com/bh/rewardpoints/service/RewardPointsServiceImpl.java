@@ -75,27 +75,29 @@ public class RewardPointsServiceImpl implements RewardPointsService{
 	
 	@Override
 	public Map<String, List<User>> updateUsers(List<User> listUser) {
-		Map<String, List<User>> allUsers = new HashMap<>();
+		Map<String, List<User>> allUsers = new HashMap<>(); 
 		List<User> existingUsersupdatedFromIspring = new ArrayList<>();
-		List<User> newUsersFromISpring = new ArrayList<>();
+		List<User> newUsersCreatedInDBFromISpring = new ArrayList<>();
 		listUser.forEach(user -> {
 			Optional<User> userOptional = rewardPointsRepository.findById(user.getUesrId());
 			if(userOptional.isPresent()) {
 				// update User if user present in DB.
 				User userFromDB = userOptional.get();
-				userFromDB.setBalance(user.getBalance());
-				userFromDB.setBhEntity(user.getBhEntity());
-				userFromDB.setCumulative(user.getCumulative());
-				userFromDB.setEmail(user.getEmail());
-				userFromDB.setRedeemed(user.getRedeemed());
-				existingUsersupdatedFromIspring.add(rewardPointsRepository.save(userFromDB));
+				User newUser = new User();
+				newUser.setUesrId(userFromDB.getUesrId());
+				newUser.setBalance(user.getBalance() + userFromDB.getBalance());
+				newUser.setBhEntity(user.getBhEntity());
+				newUser.setCumulative(user.getCumulative() + userFromDB.getCumulative());
+				newUser.setEmail(user.getEmail());
+				newUser.setRedeemed(user.getRedeemed() + userFromDB.getRedeemed());
+				existingUsersupdatedFromIspring.add(rewardPointsRepository.save(newUser));
 			}else {
 				// create/save User which is from ISpring not present in DB.
-				newUsersFromISpring.add(rewardPointsRepository.save(user));
+				newUsersCreatedInDBFromISpring.add(rewardPointsRepository.save(user));
 			}
 		});
-		allUsers.put("NewUser", newUsersFromISpring);
-		allUsers.put("ExistingUser", existingUsersupdatedFromIspring);
+		allUsers.put("NewUsersCreated", newUsersCreatedInDBFromISpring);
+		allUsers.put("ExistingUserUpdated", existingUsersupdatedFromIspring);
 		return allUsers;
 	}
 

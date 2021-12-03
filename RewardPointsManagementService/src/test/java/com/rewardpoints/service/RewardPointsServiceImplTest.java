@@ -1,7 +1,11 @@
 package com.rewardpoints.service;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -124,5 +128,38 @@ public class RewardPointsServiceImplTest {
 		Optional<User> optional = Optional.of(user);
 		Mockito.when(rewardPointsRepository.findById(Mockito.anyString())).thenReturn(optional);
 		rewardPointsService.withdrawalPoints("IL10", -10L);
+	}
+	
+	@Test
+	public void testUpdateUsers() {
+		List<User> listUser = new ArrayList<>();
+		User user = new User();
+		user.setUesrId("1234");
+		user.setBalance(23L);
+		user.setCumulative(12L);
+		user.setEmail("test@infolab.com");
+		user.setBhEntity("FL");
+		user.setRedeemed(0L);
+		listUser.add(user);
+		Optional<User> userOptional = Optional.of(user);		
+		Mockito.when(rewardPointsRepository.findById(Mockito.anyString())).thenReturn(userOptional);
+		Map<String, List<User>> response = rewardPointsService.updateUsers(listUser);
+		assertNotNull(response);
+	}
+	@Test
+	public void testUpdateUsersForElse() {
+		List<User> listUser = new ArrayList<>();
+		User user = new User();
+		user.setUesrId("1234");
+		user.setBalance(23L);
+		user.setCumulative(12L);
+		user.setEmail("test@infolab.com");
+		user.setBhEntity("FL");
+		user.setRedeemed(0L);
+		listUser.add(user);
+		Optional<User> userOptional = Optional.empty();	
+		Mockito.when(rewardPointsRepository.findById(Mockito.anyString())).thenReturn(userOptional);
+		Map<String, List<User>> response = rewardPointsService.updateUsers(listUser);
+		assertNotNull(response);
 	}
 }

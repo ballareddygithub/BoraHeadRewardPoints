@@ -7,7 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -156,5 +158,54 @@ public class RewardPointsControllerTest {
 			assertEquals("User for userId IL10 not found", e.getCause().getMessage());
 		}
 	}
+	
+	@Test
+	public void updateUsersAndThrPointsTest() throws Exception {
+		
+		Map<String, List<User>> allUsers = new HashMap<>();		
+		Mockito.when(rewardPointsService.updateUsers(Mockito.anyList())).thenReturn(allUsers);  
+		mockMvc.perform(MockMvcRequestBuilders
+				.put("/rewardpoints/scheduler/update/user")
+				.content(getListOfUsers())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+		.andDo(print())
+		.andExpect(status().isOk());
+	}
 
+	public String getListOfUsers() {
+		
+		return "[\r\n" + 
+				"  {\r\n" + 
+				"    \"email\": \"IL10@infolab.com\",\r\n" + 
+				"    \"bhEntity\": \"BHEntity1\",\r\n" + 
+				"    \"balance\": 288\r\n" + 
+				"  },\r\n" + 
+				"  {\r\n" + 
+				"    \"email\": \"IL11@infolab.com\",\r\n" + 
+				"    \"bhEntity\": \"BHEntity2\",\r\n" + 
+				"    \"balance\": 35\r\n" + 
+				"  },\r\n" + 
+				"  {\r\n" + 
+				"    \"email\": \"IL12@infolab.com\",\r\n" + 
+				"    \"bhEntity\": \"BHEntity3\",\r\n" + 
+				"    \"balance\": 75\r\n" + 
+				"  },\r\n" + 
+				"  {\r\n" + 
+				"    \"email\": \"IL13@infolab.com\",\r\n" + 
+				"    \"bhEntity\": \"BHEntity4\",\r\n" + 
+				"    \"balance\": 288\r\n" + 
+				"  },\r\n" + 
+				"  {\r\n" + 
+				"    \"email\": \"IL14@infolab.com\",\r\n" + 
+				"    \"bhEntity\": \"BHEntity5\",\r\n" + 
+				"    \"balance\": 35\r\n" + 
+				"  },\r\n" + 
+				"  {\r\n" + 
+				"    \"email\": \"IL15@infolab.com\",\r\n" + 
+				"    \"bhEntity\": \"BHEntity6\",\r\n" + 
+				"    \"balance\": 75\r\n" + 
+				"  }\r\n" + 
+				"]";
+	}
 }
