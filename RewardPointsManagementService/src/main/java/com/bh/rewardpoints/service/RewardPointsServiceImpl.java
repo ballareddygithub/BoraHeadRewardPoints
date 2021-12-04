@@ -85,7 +85,7 @@ public class RewardPointsServiceImpl implements RewardPointsService{
 				User userFromDB = userOptional.get();
 				User newUser = new User();
 				newUser.setUesrId(userFromDB.getUesrId());
-				newUser.setBalance(user.getBalance() + userFromDB.getBalance());
+				newUser.setBalance(user.getBalance() + userFromDB.getBalance()); 
 				newUser.setBhEntity(user.getBhEntity());
 				newUser.setCumulative(user.getCumulative() + userFromDB.getCumulative());
 				newUser.setEmail(user.getEmail());
